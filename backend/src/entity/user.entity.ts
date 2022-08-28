@@ -5,7 +5,10 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from "typeorm";
+
+import { Todo } from "./todo.entity";
 
 @Entity()
 export class User {
@@ -25,6 +28,9 @@ export class User {
   @Column()
   password: string;
 
+  @OneToMany(() => Todo, (todo) => todo.owner)
+  todos: Todo[];
+
   @Column()
   @CreateDateColumn()
   created_at: Date;
@@ -33,8 +39,8 @@ export class User {
   @UpdateDateColumn()
   updated_at: Date;
 
-  hashPassword() {
-    this.password = bcrypt.hashSync(this.password, 8);
+  hashPassword(unecryptedPassword: string): void {
+    this.password = bcrypt.hashSync(unecryptedPassword, 8);
   }
 
   isPasswordCorrect(unecryptedPassword: string): boolean {

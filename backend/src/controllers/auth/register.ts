@@ -23,9 +23,8 @@ export const register = async (req: Request, res: Response) => {
       const newUser = new User();
 
       newUser.email = email;
-      newUser.password = password;
       newUser.username = username;
-      newUser.hashPassword();
+      newUser.hashPassword(password);
 
       await userRepository.save(newUser);
 
