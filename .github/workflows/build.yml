@@ -10,49 +10,49 @@ on:
 jobs:
   build_frontend:
     runs-on: ubuntu-latest
-      defaults:
-        run:
-          working-directory: ./app
+    defaults:
+      run:
+        working-directory: ./app
 
-      steps:
-        - name: Checkout
+    steps:
+      - name: Checkout
           uses: actions/checkout@v2
 
-        - name: Cache npm dependencies
-          uses: actions/cache@v2
-          with:
-            path: '~/.npm'
-            key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-            restore-keys: |
-              ${{ runner.os }}-node-
-        - name: Install dependencies
-          run: npm install
+      - name: Cache npm dependencies
+        uses: actions/cache@v2
+        with:
+          path: '~/.npm'
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+      - name: Install dependencies
+        run: npm install
 
-        - name: Build
-          run: npm run build
+      - name: Build
+        run: npm run build
 
   build_backend:
     runs-on: ubuntu-latest
-      defaults:
-        run:
-          working-directory: ./backend
+    defaults:
+      run:
+        working-directory: ./backend
 
-      steps:
-        - name: Checkout
-          uses: actions/checkout@v2
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
 
-        - name: Cache npm dependencies
-          uses: actions/cache@v2
-          with:
-            path: '~/.npm'
-            key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-            restore-keys: |
-              ${{ runner.os }}-node-
-        - name: Install dependencies
-          run: npm install
+      - name: Cache npm dependencies
+        uses: actions/cache@v2
+        with:
+          path: '~/.npm'
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+             ${{ runner.os }}-node-
+      - name: Install dependencies
+        run: npm install
 
-        - name: Typechecking
-          run: tsc
+      - name: Typechecking
+        run: tsc
 
-        - name: Run linter
-          run: npm run lint
+      - name: Run linter
+        run: npm run lint
