@@ -1,3 +1,4 @@
+import * as cors from "cors";
 import * as dotenv from "dotenv";
 import * as express from "express";
 import "reflect-metadata";
@@ -19,6 +20,7 @@ dataSource
 
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 app.use("/", routes);
 
