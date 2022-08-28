@@ -9,6 +9,7 @@ module.exports = {
   ],
 
   plugins: ["@typescript-eslint", "import"],
+  ignorePatterns: ["src/migrations/*.ts"],
 
   rules: {
     // General
