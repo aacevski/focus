@@ -39,15 +39,16 @@ export default (windowName: string, options: BrowserWindowConstructorOptions): B
   };
 
   const resetToDefaults = () => {
-    const bounds = screen.getPrimaryDisplay().bounds;
-    return Object.assign({}, defaultSize, {
+    const { bounds } = screen.getPrimaryDisplay();
+    return {
+      ...defaultSize,
       x: (bounds.width - defaultSize.width) / 2,
       y: (bounds.height - defaultSize.height) / 2,
-    });
+    };
   };
 
-  const ensureVisibleOnSomeDisplay = windowState => {
-    const visible = screen.getAllDisplays().some(display => {
+  const ensureVisibleOnSomeDisplay = (windowState) => {
+    const visible = screen.getAllDisplays().some((display) => {
       return windowWithinBounds(windowState, display.bounds);
     });
     if (!visible) {
