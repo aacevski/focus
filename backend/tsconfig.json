@@ -8,5 +8,8 @@
         "experimentalDecorators": true,
         "outDir": "dist",
         "strictNullChecks": true
-    }
+    },
+    "exclude": [
+        "node_modules"
+    ]
 }
