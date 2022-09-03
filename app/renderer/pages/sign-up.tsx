@@ -1,31 +1,27 @@
-import { Button, chakra, Divider, FormControl, FormErrorMessage, FormLabel, Heading, HStack, Icon, Input, Text, useColorModeValue as mode, VStack } from '@chakra-ui/react';
+import { Alert, AlertIcon, Button, chakra, Divider, FormControl, FormErrorMessage, FormLabel, Heading, HStack, Icon, Input, Text, useColorModeValue as mode, VStack } from '@chakra-ui/react';
 import { useMutation } from '@tanstack/react-query';
 import { Field, Formik } from 'formik';
 import { FaDiscord } from 'react-icons/fa';
 
-import fetcher from '../src/axios';
 import Link from '../src/components/link';
-import { TOKEN } from '../src/constants/local-storage';
-import { writeToLocalStorage } from '../src/utils/local-storage';
+import { useUser } from '../src/providers/user-provider';
+import SignUpForm from '../src/types/sign-up-form';
 import { LoginSchema } from '../src/validation/login-schema';
 
-type LoginForm = {
-  email: string;
-  password: string;
-};
+const SignUp = () => {
+  const { signUp } = useUser();
 
-const Login = () => {
-  const { mutateAsync } = useMutation(['/login'], ({ email, password }: LoginForm) => fetcher.post('/auth/login', {
-    email,
-    password,
-  }));
+  const { mutateAsync, isSuccess, isError, error } = useMutation(
+    ['/sign-up'],
+    async ({ email, password }: SignUpForm) => signUp({ email, password }),
+  );
 
   return (
     <VStack h="100vh" align="center" justify="center">
       <VStack bg={mode('white', 'blackAlpha.400')} p={6} rounded="md" w="full" spacing={5} maxW="400px">
         <VStack spacing={8} align="center" w="full">
           <Heading size="lg">
-            Log In
+            Sign Up
           </Heading>
           <VStack spacing={4} w="full">
             <Button w="full" fontSize="sm" leftIcon={<Icon as={FaDiscord} />} variant="outline">Continue with Discord</Button>
@@ -44,12 +40,10 @@ const Login = () => {
             password: '',
           }}
           validationSchema={LoginSchema}
-          onSubmit={async (values: LoginForm) => {
+          onSubmit={async (values: SignUpForm) => {
             const { email, password } = values;
 
-            const { data: { token } } = await mutateAsync({ email, password });
-
-            writeToLocalStorage(TOKEN, token);
+            await mutateAsync({ email, password });
           }}
         >
           {({ handleSubmit, errors, touched }) => (
@@ -78,18 +72,30 @@ const Login = () => {
                   <FormErrorMessage>{errors.password}</FormErrorMessage>
                 </FormControl>
                 <Button w="full" type="submit">Submit</Button>
+                {isSuccess && (
+                  <Alert status="success">
+                    <AlertIcon />
+                    Successfully signed up. Redirecting...
+                  </Alert>
+                )}
+                {isError && (
+                  <Alert status="error">
+                    <AlertIcon />
+                    {error as string}
+                  </Alert>
+                )}
               </VStack>
             </form>
           )}
         </Formik>
         <Text fontSize="sm" color="gray.500">
-          No account yet?
+          Already have an account?
           {' '}
-          <Link href="/sign-up">Sign Up</Link>
+          <Link href="/sign-in">Sign In</Link>
         </Text>
       </VStack>
     </VStack>
   );
 };
 
-export default Login;
+export default SignUp;

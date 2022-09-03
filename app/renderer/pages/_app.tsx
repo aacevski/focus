@@ -2,6 +2,7 @@ import { ChakraProvider } from '@chakra-ui/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
+import { UserProvider } from '../src/providers/user-provider';
 import theme from '../src/theme';
 
 const queryClient = new QueryClient({
@@ -20,7 +21,9 @@ const App = ({ Component, pageProps }) => {
   return (
     <QueryClientProvider client={queryClient}>
       <ChakraProvider theme={theme}>
-        <Component {...pageProps} />
+        <UserProvider>
+          <Component {...pageProps} />
+        </UserProvider>
       </ChakraProvider>
       <ReactQueryDevtools />
     </QueryClientProvider>

@@ -10,7 +10,7 @@ const dataSource = new DataSource({
   entities: ["src/entity/*.ts"],
   migrations: ["src/migrations/*.ts"],
   migrationsTableName: "migrations",
-  logging: true,
+  logging: false,
   synchronize: true,
 });
 

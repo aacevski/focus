@@ -3,8 +3,8 @@ import { Request, Response } from "express";
 import dataSource from "../../data-source";
 import { User } from "../../entity/user.entity";
 
-export const register = async (req: Request, res: Response) => {
-  const { email, password, username } = req.body as {
+export const signUp = async (req: Request, res: Response) => {
+  const { email, password } = req.body as {
     email: string;
     password: string;
     username: string;
@@ -16,14 +16,13 @@ export const register = async (req: Request, res: Response) => {
     const user = await userRepository.findOne({ where: { email } });
 
     if (user) {
-      res.status(400).json({ error: "User already exists" });
+      return res.status(400).json({ error: "User already exists" });
     }
 
     try {
       const newUser = new User();
 
       newUser.email = email;
-      newUser.username = username;
       newUser.hashPassword(password);
 
       await userRepository.save(newUser);

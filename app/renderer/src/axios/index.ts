@@ -10,8 +10,13 @@ const fetcher = axios.create({
   },
 });
 
-fetcher.interceptors.response.use((response) => {
-  return response.data;
-});
+fetcher.interceptors.response.use(
+  (response) => {
+    return response.data;
+  },
+  (error) => {
+    return Promise.reject(error.response.data.error);
+  },
+);
 
 export default fetcher;

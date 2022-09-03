@@ -1,11 +1,12 @@
 import { Request, Response } from "express";
 import * as jwt from "jsonwebtoken";
 
+import logger from "../../config/logger";
 import { JWT_SECRET } from "../../constants/jwt";
 import dataSource from "../../data-source";
 import { User } from "../../entity/user.entity";
 
-export const login = async (req: Request, res: Response) => {
+export const signIn = async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
   const userRepository = dataSource.getRepository(User);
@@ -31,12 +32,10 @@ export const login = async (req: Request, res: Response) => {
 
     const jwtPayload: {
       id: number;
-      username: string;
       email: string;
       created_at: Date;
     } = {
       id: user.id,
-      username: user.username,
       email: user.email,
       created_at: user.created_at,
     };
@@ -46,19 +45,32 @@ export const login = async (req: Request, res: Response) => {
         expiresIn: 60 * 30,
       });
 
+      const { id, email, firstName, lastName, created_at } = user;
+
       res.status(200).json({
         status: "success",
         data: {
           token,
+          user: {
+            id,
+            email,
+            firstName,
+            lastName,
+            created_at,
+          },
         },
       });
-    } catch {
-      return res.status(500).json({
+    } catch (error) {
+      logger.error(error);
+
+      res.status(500).json({
         error: "Internal server error",
       });
     }
-  } catch {
-    return res.status(500).json({
+  } catch (error) {
+    logger.error(error);
+
+    res.status(500).json({
       error: "Internal server error",
     });
   }
