@@ -30,6 +30,11 @@ export class User {
   })
   lastName: string;
 
+  @Column({
+    nullable: true,
+  })
+  profilePicture: string;
+
   @Column()
   password: string;
 
