@@ -38,6 +38,11 @@ const updateUser = async (req: Request, res: Response) => {
         lastName,
         profilePicture: Location,
       });
+
+      return res.status(200).json({
+        status: "success",
+        data: { profilePicture: Location, firstName, lastName },
+      });
     }
 
     await userRepository.update(id, {
@@ -47,6 +52,7 @@ const updateUser = async (req: Request, res: Response) => {
 
     res.status(200).json({
       status: "success",
+      data: { firstName, lastName },
     });
   } catch (error) {
     console.log(error);

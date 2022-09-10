@@ -18,6 +18,9 @@ type UserContextProps = {
   signIn: ({ email, password }) => Promise<void>;
   signUp: ({ email, password }) => Promise<void>;
   signOut: () => void;
+  showOnboardingModal: boolean;
+
+  setUser: (user : User) => void;
 };
 
 type Props = {
@@ -29,20 +32,27 @@ export const UserContext = createContext<UserContextProps | undefined>(undefined
 export const UserProvider = ({ children }: Props) => {
   const [user, setUser] = useState<User | null | undefined>(readFromLocalStorage(USER));
   const [token, setToken] = useState<string | null>(readFromLocalStorage<string>(TOKEN));
+  const [showOnboardingModal, setShowOnboardingModal] =
+   useState<boolean>(!(user?.firstName && user?.lastName));
 
   const { asPath, replace, push } = useRouter();
 
   useEffect(() => {
     if (asPath === '/') {
-      if (user) {
-        replace('/');
-      } else {
+      if (!user) {
         replace('/sign-in');
       }
     } else if (!user && !publicRoutes.some((route: string) => asPath.startsWith(route))) {
       replace('/sign-in');
     }
   }, [asPath]);
+
+  useEffect(() => {
+    console.log(user);
+    if (user){
+      setShowOnboardingModal(!(user.firstName && user.lastName));
+    }
+  }, [user]);
 
   const signIn = async (values) => {
     const { email, password } = values;
@@ -71,7 +81,7 @@ export const UserProvider = ({ children }: Props) => {
 
     setInterval(() => {
       push({ pathname: '/sign-in', query: { email } });
-    }, 100);
+    }, 1000);
   };
 
   const signOut = () => {
@@ -84,7 +94,9 @@ export const UserProvider = ({ children }: Props) => {
   };
 
   return (
-    <UserContext.Provider value={{ user, token, signOut, signIn, signUp }}>
+    <UserContext.Provider
+      value={{ user, token, signOut, signIn, signUp, showOnboardingModal, setUser }}
+    >
       {children}
     </UserContext.Provider>
   );

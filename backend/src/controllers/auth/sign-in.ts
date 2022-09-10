@@ -10,7 +10,6 @@ export const signIn = async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
   const userRepository = dataSource.getRepository(User);
-
   try {
     const user = await userRepository.findOne({
       where: {
@@ -45,7 +44,8 @@ export const signIn = async (req: Request, res: Response) => {
         expiresIn: 60 * 30,
       });
 
-      const { id, email, firstName, lastName, created_at } = user;
+      const { id, email, firstName, lastName, created_at, profilePicture } =
+        user;
 
       res.status(200).json({
         status: "success",
@@ -57,6 +57,7 @@ export const signIn = async (req: Request, res: Response) => {
             firstName,
             lastName,
             created_at,
+            profilePicture,
           },
         },
       });
