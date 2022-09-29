@@ -48,7 +48,6 @@ export const UserProvider = ({ children }: Props) => {
   }, [asPath]);
 
   useEffect(() => {
-    console.log(user);
     if (user){
       setShowOnboardingModal(!(user.firstName && user.lastName));
     }

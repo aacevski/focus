@@ -12,6 +12,17 @@ import { OnboardingSchema } from '../src/validation/onboarding-schema';
 const Home = () => {
   const [uploadedPicture, setUploadedPicture] = useState<File>(null);
   const { user, showOnboardingModal, setUser } = useUser();
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop,
+    maxFiles: 1,
+    accept: {
+      'image/jpeg': [],
+      'image/png': [],
+    } });
+    
+    const onDrop = useCallback((acceptedFile) => {
+    setUploadedPicture(acceptedFile[0]);
+  }, []);
+    
   const { mutateAsync, isLoading, error, isError } = useMutation(
     ['/update-user'],
     async (formData : FormData) => fetcher.put(`/users/${user.id}`, formData, { headers: { 'Content-Type': 'multipart/form-data' } }),
@@ -24,23 +35,12 @@ const Home = () => {
       }
     } },
   );
-  const onDrop = useCallback((acceptedFile) => {
-    setUploadedPicture(acceptedFile[0]);
-  }, []);
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop,
-    maxFiles: 1,
-    accept: {
-      'image/jpeg': [],
-      'image/png': [],
-    } });
 
   return (
     <Stack h="100vh" justify="center" align="center">
       <Modal isOpen={showOnboardingModal} onClose={() => {}}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Modal Title</ModalHeader>
-          <ModalCloseButton />
           <ModalBody>
             <Formik
               initialValues={{
