@@ -11,15 +11,15 @@ import { Group } from "./group.entity";
 import { User } from "./user.entity";
 
 @Entity()
-export class Todo {
+export class Note {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  name: string;
+  title: string;
 
   @Column()
-  due_date: Date;
+  content: string;
 
   @ManyToOne(() => User, (user) => user.todos)
   owner: User;
