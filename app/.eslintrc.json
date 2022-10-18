@@ -23,6 +23,7 @@
      "rules": {
        "no-undef": "off",
        "object-curly-newline": "off",
+       "linebreak-style": 0,
        "operator-linebreak": [
          "error",
          "after",

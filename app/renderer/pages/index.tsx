@@ -1,6 +1,6 @@
-import { Alert, AlertIcon, Avatar, Box, Button, FormControl, FormErrorMessage, FormLabel, Input, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay, Stack, VStack } from '@chakra-ui/react';
+import { Alert, AlertIcon, Avatar, Box, Button, FormControl, FormErrorMessage, FormLabel, Input, Modal, ModalBody, ModalContent, ModalOverlay, Stack, VStack } from '@chakra-ui/react';
 import { useMutation } from '@tanstack/react-query';
-import { Formik, Field } from 'formik';
+import { Field, Formik } from 'formik';
 import { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 
@@ -23,7 +23,7 @@ const Home = () => {
     accept: {
       'image/jpeg': [],
       'image/png': [],
-    }
+    },
   });
 
   const { mutateAsync, isLoading, error, isError } = useMutation(
@@ -37,7 +37,7 @@ const Home = () => {
         } else {
           setUser({ ...user, firstName, lastName });
         }
-      }
+      },
     },
   );
 
