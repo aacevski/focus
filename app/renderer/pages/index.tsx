@@ -12,33 +12,38 @@ import { OnboardingSchema } from '../src/validation/onboarding-schema';
 const Home = () => {
   const [uploadedPicture, setUploadedPicture] = useState<File>(null);
   const { user, showOnboardingModal, setUser } = useUser();
-    const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop,
+
+  const onDrop = useCallback((acceptedFile) => {
+    setUploadedPicture(acceptedFile[0]);
+  }, []);
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
     maxFiles: 1,
     accept: {
       'image/jpeg': [],
       'image/png': [],
-    } });
-    
-    const onDrop = useCallback((acceptedFile) => {
-    setUploadedPicture(acceptedFile[0]);
-  }, []);
-    
+    }
+  });
+
   const { mutateAsync, isLoading, error, isError } = useMutation(
     ['/update-user'],
-    async (formData : FormData) => fetcher.put(`/users/${user.id}`, formData, { headers: { 'Content-Type': 'multipart/form-data' } }),
-    { onSuccess: (data: UserUpdatedResponse) => {
-      const { data: { firstName, lastName, profilePicture } } = data;
-      if (data.data.profilePicture){
-        setUser({ ...user, firstName, lastName, profilePicture });
-      } else {
-        setUser({ ...user, firstName, lastName });
+    async (formData: FormData) => fetcher.put(`/users/${user.id}`, formData, { headers: { 'Content-Type': 'multipart/form-data' } }),
+    {
+      onSuccess: (data: UserUpdatedResponse) => {
+        const { data: { firstName, lastName, profilePicture } } = data;
+        if (data.data.profilePicture) {
+          setUser({ ...user, firstName, lastName, profilePicture });
+        } else {
+          setUser({ ...user, firstName, lastName });
+        }
       }
-    } },
+    },
   );
 
   return (
     <Stack h="100vh" justify="center" align="center">
-      <Modal isOpen={showOnboardingModal} onClose={() => {}}>
+      <Modal isOpen={showOnboardingModal} onClose={() => { }}>
         <ModalOverlay />
         <ModalContent>
           <ModalBody>
@@ -53,7 +58,7 @@ const Home = () => {
                 const { firstName, lastName } = values;
                 formData.append('firstName', firstName);
                 formData.append('lastName', lastName);
-                if (uploadedPicture){
+                if (uploadedPicture) {
                   formData.append('profilePicture', uploadedPicture);
                 }
                 await mutateAsync(formData);
@@ -113,7 +118,7 @@ const Home = () => {
           </ModalBody>
         </ModalContent>
       </Modal>
-      { user?.profilePicture && <Avatar src={user.profilePicture} size="full" />}
+      {user?.profilePicture && <Avatar src={user.profilePicture} size="full" />}
     </Stack>
   );
 };
