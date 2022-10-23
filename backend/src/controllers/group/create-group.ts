@@ -9,13 +9,13 @@ const createGroup = async (req: Request, res: Response) => {
   try {
     const { title, content, owner } = req.body;
 
-    const newGroup = new Group();
+    const group = new Group();
 
-    newGroup.title = title;
-    newGroup.content = content;
-    newGroup.owner = owner;
+    group.title = title;
+    group.content = content;
+    group.owner = owner;
 
-    groupRepository.save(newGroup);
+    const newGroup = groupRepository.save(group);
 
     res.json({
       status: "success",
