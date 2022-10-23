@@ -18,10 +18,12 @@ const createGroup = async (req: Request, res: Response) => {
     group.content = content;
     group.owner = owner;
 
+    const updatedGroup = await groupRepository.save(group);
+
     res.json({
       status: "success",
       data: {
-        group,
+        group: updatedGroup,
       },
     });
   } catch {
