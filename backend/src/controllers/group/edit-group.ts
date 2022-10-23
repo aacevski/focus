@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 import dataSource from "../../data-source";
 import { Group } from "../../entity/group.entity";
 
-const createGroup = async (req: Request, res: Response) => {
+const editGroup = async (req: Request, res: Response) => {
   const groupRepository = dataSource.getRepository(Group);
 
   try {
@@ -33,4 +33,4 @@ const createGroup = async (req: Request, res: Response) => {
   }
 };
 
-export default createGroup;
+export default editGroup;
