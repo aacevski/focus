@@ -10,18 +10,18 @@ const getAllGroups = async (req: Request, res: Response) => {
   try {
     const { filterByTitle, filterByContent } = req.query;
 
-    if (filterByTitle != null || filterByContent != null) {
+    if (filterByTitle || filterByContent) {
       const groups = await groupRepository.findBy({
         title: Like(`%${filterByTitle ?? ""}%`),
         content: Like(`%${filterByContent ?? ""}%`),
       });
-      res.status(200).json({
+
+      return res.status(200).json({
         status: "success",
         data: {
           groups,
         },
       });
-      return;
     }
 
     const groups = await groupRepository.find();
