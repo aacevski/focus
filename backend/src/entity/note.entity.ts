@@ -3,17 +3,15 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
-  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
 
-import { Note } from "./note.entity";
-import { Todo } from "./todo.entity";
+import { Group } from "./group.entity";
 import { User } from "./user.entity";
 
 @Entity()
-export class Group {
+export class Note {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -23,11 +21,11 @@ export class Group {
   @Column()
   content: string;
 
-  @OneToMany(() => Todo, (todo) => todo.group)
-  todos: Todo[];
+  @ManyToOne(() => User, (user) => user.notes)
+  owner: User;
 
-  @OneToMany(() => Note, (note) => note.group)
-  notes: Note[];
+  @ManyToOne(() => Group, (group) => group.notes)
+  group: Group;
 
   @Column()
   @CreateDateColumn()
@@ -36,7 +34,4 @@ export class Group {
   @Column()
   @UpdateDateColumn()
   updated_at: Date;
-
-  @ManyToOne(() => User, (user) => user.groups)
-  owner: User;
 }
