@@ -15,7 +15,7 @@ const createGroup = async (req: Request, res: Response) => {
     group.content = content;
     group.owner = owner;
 
-    const newGroup = groupRepository.save(group);
+    const newGroup = await groupRepository.save(group);
 
     res.json({
       status: "success",
