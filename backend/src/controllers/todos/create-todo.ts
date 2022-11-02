@@ -14,8 +14,13 @@ const createTodo = async (req: Request, res: Response) => {
     newTodo.name = name;
     newTodo.due_date = due_date;
     newTodo.owner = owner;
-
-    todoRepository.save(newTodo);
+    const todo = todoRepository.save(newTodo);
+    res.status(200).json({
+      status: "success",
+      data: {
+        todo,
+      },
+    });
   } catch {
     res.status(500).json({
       error: "Internal server error",

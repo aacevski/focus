@@ -3,29 +3,27 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from "typeorm";
 
-import { Group } from "./group.entity";
+import { Todo } from "./todo.entity";
 import { User } from "./user.entity";
 
 @Entity()
-export class Todo {
+export class Group {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
-  name: string;
+  title: string;
 
   @Column()
-  due_date: Date;
+  content: string;
 
-  @ManyToOne(() => User, (user) => user.todos)
-  owner: User;
-
-  @ManyToOne(() => Group, (group) => group.todos)
-  group: Group;
+  @OneToMany(() => Todo, (todo) => todo.group)
+  todos: Todo[];
 
   @Column()
   @CreateDateColumn()
@@ -34,4 +32,7 @@ export class Todo {
   @Column()
   @UpdateDateColumn()
   updated_at: Date;
+
+  @ManyToOne(() => User, (user) => user.groups)
+  owner: User;
 }
