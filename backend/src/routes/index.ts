@@ -2,6 +2,7 @@ import { Router } from "express";
 
 import auth from "./auth";
 import group from "./group";
+import note from "./note";
 import todo from "./todo";
 import user from "./user";
 
@@ -14,5 +15,7 @@ router.use("/todos", todo);
 router.use("/users", user);
 
 router.use("/groups", group);
+
+router.use("/notes", note);
 
 export default router;
