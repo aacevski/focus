@@ -1,10 +1,9 @@
-/* eslint-disable react/jsx-no-constructed-context-values */
-import { createContext, PropsWithChildren, useContext, useEffect, useState } from 'react';
+import { createContext, PropsWithChildren, useContext, useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import fetcher from '../axios';
 import { TOKEN, USER } from '../constants/local-storage';
-import User from '../types/user';
+import { User } from '../types/user';
 import { readFromLocalStorage, writeToLocalStorage } from '../utils/local-storage';
 
 const publicRoutes: string[] = [
@@ -15,12 +14,12 @@ const publicRoutes: string[] = [
 type UserContextProps = {
   user: User | null;
   token: string | null;
-  signIn: ({ email, password }) => Promise<void>;
-  signUp: ({ email, password }) => Promise<void>;
+  signIn: ({ email, password }: { email: string; password: string }) => Promise<void>;
+  signUp: ({ email, password }: { email: string; password: string }) => Promise<void>;
   signOut: () => void;
   showOnboardingModal: boolean;
 
-  setUser: (user : User) => void;
+  setUser: (user: User) => void;
 };
 
 type Props = {
@@ -33,36 +32,38 @@ export const UserProvider = ({ children }: Props) => {
   const [user, setUser] = useState<User | null | undefined>(readFromLocalStorage(USER));
   const [token, setToken] = useState<string | null>(readFromLocalStorage<string>(TOKEN));
   const [showOnboardingModal, setShowOnboardingModal] =
-   useState<boolean>(!(user?.firstName && user?.lastName));
+    useState<boolean>(!(user?.firstName && user?.lastName));
 
   const navigate = useNavigate();
   const location = useLocation();
-  
+
   useEffect(() => {
     if (location.pathname === '/') {
       if (!user) {
         navigate('/sign-in');
       }
-    } else if (!user && !publicRoutes.some((route: string) => location.pathname.startsWith(route))) {
+    } else if (!user && !publicRoutes.some(
+      (route: string) => location.pathname.startsWith(route),
+    )) {
       navigate('/sign-in');
+    } else if (user && publicRoutes.some((route: string) => location.pathname.startsWith(route))) {
+      navigate('/');
     }
-  }, [location]);
+  }, [location, navigate, user]);
 
   useEffect(() => {
-    if (user){
+    if (user) {
       setShowOnboardingModal(!(user.firstName && user.lastName));
     }
   }, [user]);
 
-  const signIn = async (values) => {
-    const { email, password } = values;
-
+  const signIn = async ({ email, password }: { email: string; password: string }) => {
     const { data: { token: loggedInUserToken, user: loggedInUser } } = await fetcher.post('/auth/sign-in', {
       email,
       password,
     });
 
-    writeToLocalStorage(TOKEN, token);
+    writeToLocalStorage(TOKEN, loggedInUserToken);
     writeToLocalStorage(USER, loggedInUser);
 
     setToken(loggedInUserToken);
@@ -71,9 +72,7 @@ export const UserProvider = ({ children }: Props) => {
     navigate('/');
   };
 
-  const signUp = async (values) => {
-    const { email, password } = values;
-
+  const signUp = async ({ email, password }: { email: string; password: string }) => {
     await fetcher.post('/auth/sign-up', {
       email,
       password,
@@ -95,7 +94,11 @@ export const UserProvider = ({ children }: Props) => {
 
   return (
     <UserContext.Provider
-      value={{ user: user ?? null, token, signOut, signIn, signUp, showOnboardingModal, setUser }}
+      value={
+        useMemo(() => ({
+          user: user ?? null, token, signOut, signIn, signUp, showOnboardingModal, setUser,
+        }), [user, token, signOut, signIn, signUp, showOnboardingModal, setUser])
+      }
     >
       {children}
     </UserContext.Provider>

@@ -1,4 +1,4 @@
-type User = {
+export type User = {
   id: string;
   email: string;
   firstName: string;
@@ -13,5 +13,3 @@ export type UserUpdatedResponse = {
     lastName: string;
   };
 };
-
-export default User;

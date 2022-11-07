@@ -1,4 +1,3 @@
-/* eslint-disable import/no-self-import */
 import axios from 'axios';
 
 import { API_URL } from '../constants/urls';

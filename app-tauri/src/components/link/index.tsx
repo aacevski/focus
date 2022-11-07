@@ -1,4 +1,4 @@
-import { Link as RouterDomLink } from "react-router-dom";
+import { Link as ReactRouterLink } from 'react-router-dom';
 import {
   Link as ChakraLink,
   LinkProps as ChakraLinkProps,
@@ -9,11 +9,9 @@ type Props = ChakraLinkProps;
 
 const Link = ({ href, children, ...rest }: Props) => {
   return (
-    <RouterDomLink to={href!}>
-      <ChakraLink  color={mode('black', 'white')}>
-        {children}
-      </ChakraLink>
-    </RouterDomLink>
+    <ChakraLink as={ReactRouterLink} to={href} color={mode('black', 'white')} {...rest}>
+      {children}
+    </ChakraLink>
   );
 };
 

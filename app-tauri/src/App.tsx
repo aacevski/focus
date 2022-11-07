@@ -1,37 +1,40 @@
-import { ChakraProvider } from "@chakra-ui/react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { ChakraProvider } from '@chakra-ui/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { createBrowserRouter, Outlet, RouterProvider } from 'react-router-dom';
 
-import { UserProvider } from "../src/providers/user-provider";
-import theme from "../src/theme";
-import { createBrowserRouter, RouterProvider, Route, Outlet } from "react-router-dom";
-import React, { PropsWithChildren } from "react";
-import SignIn from "./pages/sign-in";
-import SignUp from "./pages/sign-up";
-
+import { UserProvider } from './providers/user-provider';
+import theme from './theme';
+import Home from './pages';
+import SignIn from './pages/sign-in';
+import SignUp from './pages/sign-up';
 
 const Root = () => {
   return (
     <UserProvider>
       <Outlet />
     </UserProvider>
-  )
+  );
 };
 
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: <Root />,
     children: [
       {
         path: '/sign-in',
-        element: <SignIn />
+        element: <SignIn />,
       },
       {
         path: '/sign-up',
-        element: <SignUp />
-      }
-    ]
+        element: <SignUp />,
+      },
+      {
+        path: '/',
+        element: <Home />,
+      },
+    ],
   },
 ]);
 
