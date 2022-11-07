@@ -1,6 +1,6 @@
 import { Avatar, Stack } from '@chakra-ui/react';
-import OnboardingModal from '../components/onboarding-modal';
 
+import OnboardingModal from '../components/onboarding-modal';
 import { useUser } from '../providers/user-provider';
 
 const Home = () => {

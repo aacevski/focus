@@ -2,7 +2,7 @@ import { Alert, AlertIcon, Button, chakra, Divider, FormControl, FormErrorMessag
 import { useMutation } from '@tanstack/react-query';
 import { Field, Formik } from 'formik';
 import { FaDiscord } from 'react-icons/fa';
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 
 import Link from '../components/link';
 import { useUser } from '../providers/user-provider';
