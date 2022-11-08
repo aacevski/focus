@@ -4,7 +4,7 @@ export interface Requester {
   (): void;
 }
 
-export function setSuccess(res: Response, data?: any): void {
+export function setSuccess<T>(res: Response, data: T): void {
   res.status(200).json({
     status: "success",
     data: {
