@@ -40,7 +40,7 @@ export const signIn = async (req: Request, res: Response) => {
     };
 
     try {
-      const token = jwt.sign(jwtPayload, JWT_SECRET!, {
+      const token = jwt.sign(jwtPayload, "andrej", {
         expiresIn: 60 * 30,
       });
 
