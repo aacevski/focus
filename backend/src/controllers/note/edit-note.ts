@@ -4,22 +4,24 @@ import dataSource from "../../data-source";
 import { Note } from "../../entity/note.entity";
 import { setSuccess, tryAndCatchIt } from "../utils/res-helpers";
 
-const createNote = async (req: Request, res: Response) => {
+const editNote = async (req: Request, res: Response) => {
   const noteRepository = dataSource.getRepository(Note);
 
   tryAndCatchIt(res, async () => {
+    const { id } = req.params;
     const { title, content, owner } = req.body;
 
-    const note = new Note();
+    const note = await noteRepository.findOneByOrFail({
+      id: parseInt(id),
+    });
 
     note.title = title;
     note.content = content;
     note.owner = owner;
 
-    const newNote = await noteRepository.save(note);
-
-    setSuccess(res, newNote);
+    const updatedNote = await noteRepository.save(note);
+    setSuccess(res, updatedNote);
   });
 };
 
-export default createNote;
+export default editNote;
