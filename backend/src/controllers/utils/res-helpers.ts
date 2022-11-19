@@ -1,9 +1,5 @@
 import { Request, Response } from "express";
 
-export interface Requester {
-  (): void;
-}
-
 export function setSuccess<T>(res: Response, data: T): void {
   res.status(200).json({
     status: "success",
@@ -13,9 +9,9 @@ export function setSuccess<T>(res: Response, data: T): void {
   });
 }
 
-export function tryAndCatchIt(res: Response, requester: Requester) {
+export function tryAndCatchIt(res: Response, callback: () => void) {
   try {
-    requester();
+    callback();
   } catch {
     res.status(500).json({
       error: "Internal server error",
