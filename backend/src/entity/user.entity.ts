@@ -9,6 +9,7 @@ import {
 } from "typeorm";
 
 import { Group } from "./group.entity";
+import { Note } from "./note.entity";
 import { Todo } from "./todo.entity";
 
 @Entity()
@@ -41,6 +42,9 @@ export class User {
 
   @OneToMany(() => Todo, (todo) => todo.owner)
   todos: Todo[];
+
+  @OneToMany(() => Note, (note) => note.owner)
+  notes: Note[];
 
   @OneToMany(() => Group, (group) => group.owner)
   groups: Group[];
